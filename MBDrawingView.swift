@@ -1,19 +1,19 @@
 import UIKit
 
-public protocol DrawingViewDelegate {
+public protocol MBDrawingViewDelegate {
 
-    func drawingView(drawingView: DrawingView, didDrawWithPoints points: [CGPoint])
+    func drawingView(drawingView: MBDrawingView, didDrawWithPoints points: [CGPoint])
 
 }
 
-public class DrawingView: UIView {
+public class MBDrawingView: UIView {
 
     private var points: [CGPoint]!
     private var context: CGContextRef!
     private var strokeColor: UIColor = UIColor.blueColor().colorWithAlphaComponent(0.75)
     private var lineWidth: CGFloat = 3
 
-    public var delegate: DrawingViewDelegate?
+    public var delegate: MBDrawingViewDelegate?
 
     public convenience init(frame: CGRect, strokeColor: UIColor, lineWidth: CGFloat) {
         self.init(frame: frame)
