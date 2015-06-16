@@ -65,7 +65,7 @@ public class MBDrawingView: UIView {
     }
 
     private func createContext() {
-        UIGraphicsBeginImageContext(bounds.size)
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, UIScreen.mainScreen().scale)
         context = UIGraphicsGetCurrentContext()
         setStrokeColor(self.strokeColor)
         setLineWidth(self.lineWidth)
