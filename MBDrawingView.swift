@@ -28,7 +28,7 @@ public class MBDrawingView: UIView {
         setup()
     }
 
-    required public init(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
         setup()
@@ -71,10 +71,10 @@ public class MBDrawingView: UIView {
         setLineWidth(self.lineWidth)
     }
 
-    override public func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override public func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         points.removeAll(keepCapacity: false)
 
-        let firstPoint = (touches.first as! UITouch).locationInView(self)
+        let firstPoint = touches.first!.locationInView(self)
 
         points.append(firstPoint)
 
@@ -82,10 +82,10 @@ public class MBDrawingView: UIView {
         CGContextMoveToPoint(context, firstPoint.x, firstPoint.y)
     }
 
-    override public func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override public func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         CGContextMoveToPoint(context, points.last!.x, points.last!.y)
 
-        let point = (touches.first as! UITouch).locationInView(self)
+        let point = touches.first!.locationInView(self)
 
         points.append(point)
 
@@ -97,7 +97,7 @@ public class MBDrawingView: UIView {
         layer.contents = image.CGImage
     }
 
-    override public func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override public func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         delegate?.drawingView(self, didDrawWithPoints: points)
     }
 
