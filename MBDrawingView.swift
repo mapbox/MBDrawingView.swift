@@ -92,7 +92,11 @@ public class MBDrawingView: UIView {
         CGContextAddLineToPoint(context, point.x, point.y)
         CGContextStrokePath(context)
 
-        let image = UIGraphicsGetImageFromCurrentImageContext()
+        #if swift(>=2.3)
+            let image = UIGraphicsGetImageFromCurrentImageContext()!
+        #else
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+        #endif
 
         layer.contents = image.CGImage
     }
