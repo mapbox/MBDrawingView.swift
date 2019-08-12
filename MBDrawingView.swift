@@ -9,8 +9,8 @@ public protocol MBDrawingViewDelegate {
 public class MBDrawingView: UIView {
 
     private var points: [CGPoint]!
-    private var context: CGContextRef!
-    private var strokeColor: UIColor = UIColor.blueColor().colorWithAlphaComponent(0.75)
+    private var context: CGContext!
+    private var strokeColor: UIColor = UIColor.blue.withAlphaComponent(0.75)
     private var lineWidth: CGFloat = 3
 
     public var delegate: MBDrawingViewDelegate?
@@ -40,17 +40,16 @@ public class MBDrawingView: UIView {
 
     public func setStrokeColor(strokeColor: UIColor) {
         self.strokeColor = strokeColor
-        CGContextSetStrokeColorWithColor(context, strokeColor.CGColor)
+        context.setStrokeColor(strokeColor.cgColor)
     }
 
     public func setLineWidth(lineWidth: CGFloat) {
         self.lineWidth = lineWidth
-        CGContextSetLineWidth(context, lineWidth)
+        context.setLineWidth(lineWidth)
     }
 
     private func setup() {
-        backgroundColor = UIColor.clearColor()
-
+        backgroundColor = UIColor.clear
         points = [CGPoint]()
 
         createContext()
@@ -65,44 +64,44 @@ public class MBDrawingView: UIView {
     }
 
     private func createContext() {
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, UIScreen.mainScreen().scale)
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, UIScreen.main.scale)
         context = UIGraphicsGetCurrentContext()
-        setStrokeColor(self.strokeColor)
-        setLineWidth(self.lineWidth)
+        setStrokeColor(strokeColor: self.strokeColor)
+        setLineWidth(lineWidth: self.lineWidth)
     }
 
-    override public func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        points.removeAll(keepCapacity: false)
-
-        let firstPoint = touches.first!.locationInView(self)
-
+    
+    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        points.removeAll(keepingCapacity: false)
+        
+        let firstPoint = touches.first!.location(in: self)
+        
         points.append(firstPoint)
-
-        CGContextBeginPath(context)
-        CGContextMoveToPoint(context, firstPoint.x, firstPoint.y)
+        context.beginPath()
+        context.move(to: firstPoint)
     }
-
-    override public func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        CGContextMoveToPoint(context, points.last!.x, points.last!.y)
-
-        let point = touches.first!.locationInView(self)
-
+    
+    override public func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        context.move(to: points.last!)
+        
+        let point = touches.first!.location(in: self)
         points.append(point)
-
-        CGContextAddLineToPoint(context, point.x, point.y)
-        CGContextStrokePath(context)
-
+        
+        context.addLine(to: point)
+        context.strokePath()
+        
         #if swift(>=2.3)
-            let image = UIGraphicsGetImageFromCurrentImageContext()!
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
         #else
-            let image = UIGraphicsGetImageFromCurrentImageContext()
+        let image = UIGraphicsGetImageFromCurrentImageContext()
         #endif
-
-        layer.contents = image.CGImage
+        
+        layer.contents = image.cgImage
     }
-
-    override public func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        delegate?.drawingView(self, didDrawWithPoints: points)
+    
+    override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        delegate?.drawingView(drawingView: self, didDrawWithPoints: points)
     }
 
 }
